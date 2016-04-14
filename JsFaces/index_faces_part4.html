@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+<h1>Guessing Game</h1>
+<style type="text/css">
+	div{
+		position: absolute;
+		width: 500px;
+		height: 500px;
+	}
+	#rightSide{
+		left: 500px;
+		border-left: 1px solid black;
+	}
+	img{
+		position: absolute;
+	}
+</style>
+<div id="leftSide" name="leftSide"></div>
+<div id="rightSide" name="rightSide"></div>
+
+</body>
+</html>
+
+<script>	
+	var numberOfFaces = 5;
+	var leftSideDiv = document.getElementById("leftSide");
+	var rightSideDiv = document.getElementById("rightSide");
+	//left side of the border
+	function generateFaces(){
+		for (var i = 1; i <= numberOfFaces; i++) {
+		var x = document.createElement("img");
+		x.src = "http://home.cse.ust.hk/~rossiter/mooc/matching_game/smile.png";
+		var topRange = Math.floor((Math.random() + 400) *Math.random());
+		var leftRange = Math.floor((Math.random() + 400)*Math.random());
+		x.style.top = topRange + "px";
+		x.style.left = leftRange + "px";		
+		leftSideDiv.appendChild(x);	
+		}
+	//Copy to Right Div
+	copyRight();
+	leftSideDiv.lastChild.onclick = function goToNextLevel(event){
+											alert("success click");
+											event.stopPropagation();
+											deleteNodes();
+											numberOfFaces += 5;
+											generateFaces(); 
+											}
+	 
+	console.log(leftSideDiv.parentNode); //just testing output of lastChild
+	console.log(rightSideDiv.lastChild.lastChild); //rightSide contains a div within a div
+	};
+//end generateFaces
+
+	function copyRight(){
+				//right side of the border
+		var copyFaces = leftSideDiv.cloneNode(true);
+		copyFaces.removeChild(copyFaces.lastChild);
+		rightSideDiv.appendChild(copyFaces);
+	}
+	//deletes nodes
+	function deleteNodes(){
+		var countDeleted = 0;
+		while(leftSideDiv.firstChild){
+			leftSideDiv.removeChild(leftSideDiv.firstChild);
+		}
+		while (rightSideDiv.firstChild){
+				rightSideDiv.removeChild(rightSideDiv.firstChild);
+				countDeleted++;
+		}
+		console.log(countDeleted + "is countDeleted");
+				console.log(rightSideDiv);
+	}
+	window.onload=generateFaces();
+
+	var body = document.getElementsByTagName("body")[0];
+	
+	body.onclick = function wrongFace(){
+			alert("Sorry, wrong face selected...GAME OVER! Please refresh the page to play again.. ");
+			body.onClick = null;  //turn off body clickability
+			leftSideDiv.lastChild.onClick = null; //turn off extra face's clickability
+			while(body.firstChild){
+			body.removeChild(body.firstChild);
+			}
+		}
+</script>
